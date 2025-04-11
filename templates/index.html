@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento de Transportadoras</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS - Adicione seu arquivo aqui -->
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <!-- Container principal -->
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-dark text-white">
+            <div class="sidebar-header p-3">
+                <h3>Transportadoras</h3>
+            </div>
+
+            <ul class="list-unstyled components p-3">
+                <li class="active">
+                    <a href="#dashboard" id="nav-dashboard" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#transportadoras" id="nav-transportadoras" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-truck me-2"></i> Transportadoras
+                    </a>
+                </li>
+                <li>
+                    <a href="#pracas" id="nav-pracas" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-geo-alt me-2"></i> Praças
+                    </a>
+                </li>
+                <li>
+                    <a href="#tabelas" id="nav-tabelas" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-table me-2"></i> Tabelas de Preço
+                    </a>
+                </li>
+                <li>
+                    <a href="#taxas" id="nav-taxas" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-cash-coin me-2"></i> Taxas
+                    </a>
+                </li>
+                <li>
+                    <a href="#municipios" id="nav-municipios" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-building me-2"></i> Municípios
+                    </a>
+                </li>
+                <li id="li-admin-opcoes" class="admin-only" style="display:none;">
+                    <a href="#opcoes" id="nav-opcoes" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-gear me-2"></i> Opções do Sistema
+                    </a>
+                </li>
+                <li id="li-admin-usuarios" class="admin-only" style="display:none;">
+                    <a href="#usuarios" id="nav-usuarios" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-people me-2"></i> Usuários
+                    </a>
+                </li>
+                <li>
+                    <a href="#calculadora" id="nav-calculadora" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-calculator me-2"></i> Calculadora de Frete
+                    </a>
+                </li>
+                <li>
+                    <a href="#perfil" id="nav-perfil" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-person-circle me-2"></i> Meu Perfil
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="btn-logout" class="nav-link d-flex align-items-center">
+                        <i class="bi bi-box-arrow-right me-2"></i> Sair
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo da página -->
+        <div id="content" class="container-fluid">
+            <!-- Navbar superior -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <span class="navbar-brand ms-3">Sistema de Gerenciamento de Transportadoras</span>
+                    <div class="ms-auto">
+                        <span id="user-info" class="me-3"></span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Conteúdo dinâmico -->
+            <div id="page-content">
+                <!-- Login -->
+                <!-- Dashboard -->
+                <div id="dashboard-page" class="container" style="display: none;">
+                    <h2>Dashboard</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total de Transportadoras</h5>
+                                    <h2 id="total-transportadoras" class="card-text">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total de Praças</h5>
+                                    <h2 id="total-pracas" class="card-text">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total de Tabelas</h5>
+                                    <h2 id="total-tabelas" class="card-text">0</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportadoras -->
+                <div id="transportadoras-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Transportadoras</h2>
+                        <button id="btn-nova-transportadora" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nova Transportadora
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="transportadoras-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Código</th>
+                                    <th>Nome</th>
+                                    <th>Nome Fantasia</th>
+                                    <th>CNPJ</th>
+                                    <th>Sistema</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transportadoras-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulário de Transportadora -->
+                <div id="transportadora-form-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="transportadora-form-title">Nova Transportadora</h2>
+                        <button id="btn-voltar-transportadoras" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="transportadora-form">
+                        <input type="hidden" id="transportadora-id">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="transportadora-cod-for" class="form-label">Código</label>
+                                <input type="text" class="form-control" id="transportadora-cod-for" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label for="transportadora-descricao" class="form-label">Nome/Razão Social</label>
+                                <input type="text" class="form-control" id="transportadora-descricao" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="transportadora-nome-fan" class="form-label">Nome Fantasia</label>
+                                <input type="text" class="form-control" id="transportadora-nome-fan">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="transportadora-cnpj" class="form-label">CNPJ</label>
+                                <input type="text" class="form-control" id="transportadora-cnpj">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="transportadora-insc-est" class="form-label">Inscrição Estadual</label>
+                                <input type="text" class="form-control" id="transportadora-insc-est">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="transportadora-insc-mun" class="form-label">Inscrição Municipal</label>
+                                <input type="text" class="form-control" id="transportadora-insc-mun">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="transportadora-sistema" class="form-label">Sistema</label>
+                                <select class="form-select" id="transportadora-sistema">
+                                    <!-- Opções serão inseridas via JavaScript -->
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="transportadora-tipo-unidade" class="form-label">Tipo de Unidade</label>
+                                <select class="form-select" id="transportadora-tipo-unidade">
+                                    <option value="matriz">Matriz</option>
+                                    <option value="filial">Filial</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="transportadora-id-matriz" class="form-label">Matriz</label>
+                                <select class="form-select" id="transportadora-id-matriz" disabled>
+                                    <!-- Opções serão inseridas via JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-transportadora"
+                                class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Praças -->
+                <div id="pracas-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Praças</h2>
+                        <button id="btn-nova-praca" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nova Praça
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="pracas-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Transportadora</th>
+                                    <th>Municípios</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pracas-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulário de Praça -->
+                <div id="praca-form-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="praca-form-title">Nova Praça</h2>
+                        <button id="btn-voltar-pracas" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="praca-form">
+                        <input type="hidden" id="praca-id">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="praca-nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="praca-nome" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="praca-transportadora" class="form-label">Transportadora</label>
+                                <select class="form-select" id="praca-transportadora" required>
+                                    <!-- Opções serão inseridas via JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="praca-municipios" class="form-label">Municípios</label>
+                            <select id="praca-municipios" class="form-select" multiple size="10">
+                                <!-- Municípios serão carregados via JavaScript -->
+                            </select>
+                            <div class="form-text">
+                                Use Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplos municípios.
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-praca" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabelas de Preço -->
+                <div id="tabelas-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Tabelas de Preço</h2>
+                        <button id="btn-nova-tabela" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nova Tabela
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="tabelas-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Praça</th>
+                                    <th>Modal</th>
+                                    <th>Prazo</th>
+                                    <th>Tipo Cobrança</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelas-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulário de Tabela de Preço -->
+                <div id="tabela-form-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="tabela-form-title">Nova Tabela de Preço</h2>
+                        <button id="btn-voltar-tabelas" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="tabela-form">
+                        <input type="hidden" id="tabela-id">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tabela-praca" class="form-label">Praça</label>
+                                <select class="form-select" id="tabela-praca" required>
+                                    <!-- Opções serão inseridas via JavaScript -->
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tabela-modal" class="form-label">Modal</label>
+                                <select class="form-select" id="tabela-modal">
+                                    <option value="rodoviario">Rodoviário</option>
+                                    <option value="aereo">Aéreo</option>
+                                    <option value="maritimo">Marítimo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="tabela-tipo-cobranca" class="form-label">Tipo de Cobrança</label>
+                                <select class="form-select" id="tabela-tipo-cobranca">
+                                    <option value="peso">Peso</option>
+                                    <option value="cubagem">Cubagem</option>
+                                    <option value="ambos">Ambos (maior valor)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="tabela-prazo" class="form-label">Prazo (dias)</label>
+                                <input type="number" class="form-control" id="tabela-prazo" min="1">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="tabela-tipo-entrega" class="form-label">Tipo de Entrega</label>
+                                <select class="form-select" id="tabela-tipo-entrega">
+                                    <option value="normal">Normal</option>
+                                    <option value="expressa">Expressa</option>
+                                    <option value="prioritaria">Prioritária</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tabela-observacoes" class="form-label">Observações</label>
+                            <textarea class="form-control" id="tabela-observacoes" rows="3"></textarea>
+                        </div>
+
+                        <!-- Faixas de Preço -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Faixas de Preço</h5>
+                                <button type="button" id="btn-adicionar-faixa" class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-plus-circle"></i> Adicionar Faixa
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Faixa Mínima</th>
+                                                <th>Faixa Máxima</th>
+                                                <th>Valor (R$)</th>
+                                                <th>Adicional p/ Excedente</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="faixas-tbody">
+                                            <!-- Faixas serão inseridas via JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Taxas -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Taxas</h5>
+                                <button type="button" id="btn-adicionar-taxa" class="btn btn-secondary btn-sm">
+                                    <i class="bi bi-plus-circle"></i> Adicionar Taxa
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Taxa</th>
+                                                <th>Valor</th>
+                                                <th>Unidade</th>
+                                                <th>Obrigatória</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="taxas-tbody">
+                                            <!-- Taxas serão inseridas via JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-tabela" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Taxas -->
+                <div id="taxas-page" class="container" style="display: none;">
+                    <ul class="nav nav-tabs mb-4" id="taxasTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="taxa-tipos-tab" data-bs-toggle="tab"
+                                data-bs-target="#taxa-tipos-content" type="button" role="tab">Tipos de Taxa</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="taxa-transportes-tab" data-bs-toggle="tab"
+                                data-bs-target="#taxa-transportes-content" type="button" role="tab">Taxas de
+                                Transporte</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="taxasTabContent">
+                        <!-- Tipos de Taxa -->
+                        <div class="tab-pane fade show active" id="taxa-tipos-content" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3>Tipos de Taxa</h3>
+                                <button id="btn-novo-taxa-tipo" class="btn btn-primary admin-only">
+                                    <i class="bi bi-plus-circle"></i> Novo Tipo de Taxa
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="taxa-tipos-table" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Sigla</th>
+                                            <th>Descrição</th>
+                                            <th>Aplicação</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="taxa-tipos-tbody">
+                                        <!-- Dados serão inseridos via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Taxas de Transporte -->
+                        <div class="tab-pane fade" id="taxa-transportes-content" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3>Taxas de Transporte</h3>
+                                <button id="btn-nova-taxa-transporte" class="btn btn-primary admin-only">
+                                    <i class="bi bi-plus-circle"></i> Nova Taxa de Transporte
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="taxa-transportes-table" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Sigla</th>
+                                            <th>Descrição</th>
+                                            <th>Aplicação</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="taxa-transportes-tbody">
+                                        <!-- Dados serão inseridos via JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário de Tipo de Taxa -->
+                <div id="taxa-tipo-form-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="taxa-tipo-form-title">Novo Tipo de Taxa</h2>
+                        <button id="btn-voltar-taxas" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="taxa-tipo-form">
+                        <input type="hidden" id="taxa-tipo-id">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="taxa-tipo-sigla" class="form-label">Sigla</label>
+                                <input type="text" class="form-control" id="taxa-tipo-sigla" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label for="taxa-tipo-descricao" class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="taxa-tipo-descricao" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taxa-tipo-aplicacao" class="form-label">Aplicação</label>
+                            <input type="text" class="form-control" id="taxa-tipo-aplicacao">
+                        </div>
+                        <div class="mb-3">
+                            <label for="taxa-tipo-observacoes" class="form-label">Observações</label>
+                            <textarea class="form-control" id="taxa-tipo-observacoes" rows="3"></textarea>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-taxa-tipo"
+                                class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Formulário de Taxa de Transporte -->
+                <div id="taxa-transporte-form-page" class="container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="taxa-transporte-form-title">Nova Taxa de Transporte</h2>
+                        <button id="btn-voltar-taxas-transporte" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="taxa-transporte-form">
+                        <input type="hidden" id="taxa-transporte-id">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="taxa-transporte-sigla" class="form-label">Sigla</label>
+                                <input type="text" class="form-control" id="taxa-transporte-sigla" required>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label for="taxa-transporte-descricao" class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="taxa-transporte-descricao" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taxa-transporte-aplicacao" class="form-label">Aplicação</label>
+                            <input type="text" class="form-control" id="taxa-transporte-aplicacao">
+                        </div>
+                        <div class="mb-3">
+                            <label for="taxa-transporte-observacao" class="form-label">Observação</label>
+                            <textarea class="form-control" id="taxa-transporte-observacao" rows="3"></textarea>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-taxa-transporte"
+                                class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Municípios -->
+                <div id="municipios-page" class="container" style="display: none;">
+                    <h2>Municípios</h2>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <select class="form-select" id="municipio-filtro-uf">
+                                <option value="">Filtrar por Estado</option>
+                                <!-- Estados serão carregados via JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="municipios-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Código IBGE</th>
+                                    <th>Município</th>
+                                    <th>UF</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="municipios-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Opções do Sistema -->
+                <div id="opcoes-page" class="container admin-only" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Opções do Sistema</h2>
+                        <button id="btn-nova-opcao" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Nova Opção
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="opcoes-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="opcoes-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Usuários -->
+                <div id="usuarios-page" class="container admin-only" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Usuários</h2>
+                        <button id="btn-novo-usuario" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Novo Usuário
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="usuarios-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuário</th>
+                                    <th>Perfil</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usuarios-tbody">
+                                <!-- Dados serão inseridos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Formulário de Usuário -->
+                <div id="usuario-form-page" class="container admin-only" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 id="usuario-form-title">Novo Usuário</h2>
+                        <button id="btn-voltar-usuarios" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                    <form id="usuario-form">
+                        <input type="hidden" id="usuario-id">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="usuario-username" class="form-label">Nome de Usuário</label>
+                                <input type="text" class="form-control" id="usuario-username" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="usuario-role" class="form-label">Perfil</label>
+                                <select class="form-select" id="usuario-role" required>
+                                    <option value="user">Usuário</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="usuario-password" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="usuario-password">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="usuario-confirm-password" class="form-label">Confirmar Senha</label>
+                                <input type="password" class="form-control" id="usuario-confirm-password">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" id="btn-cancelar-usuario" class="btn btn-secondary">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Perfil do Usuário -->
+                <div id="perfil-page" class="container" style="display: none;">
+                    <h2>Meu Perfil</h2>
+                    <form id="perfil-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nome de Usuário</label>
+                                <input type="text" class="form-control" id="perfil-username" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Perfil</label>
+                                <input type="text" class="form-control" id="perfil-role" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="perfil-password-atual" class="form-label">Senha Atual</label>
+                                <input type="password" class="form-control" id="perfil-password-atual">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="perfil-nova-password" class="form-label">Nova Senha</label>
+                                <input type="password" class="form-control" id="perfil-nova-password">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary">Atualizar Senha</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Calculadora de Frete -->
+                <div id="calculadora-page" class="container" style="display: none;">
+                    <h2>Calculadora de Frete</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form id="calculadora-form">
+                                <div class="mb-3">
+                                    <label for="calculadora-cep" class="form-label">CEP Destino</label>
+                                    <input type="text" class="form-control" id="calculadora-cep" required>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="calculadora-peso" class="form-label">Peso (kg)</label>
+                                        <input type="number" class="form-control" id="calculadora-peso" step="0.01">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="calculadora-cubagem" class="form-label">Cubagem (m³)</label>
+                                        <input type="number" class="form-control" id="calculadora-cubagem" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="calculadora-transportadora" class="form-label">Transportadora</label>
+                                    <select class="form-select" id="calculadora-transportadora">
+                                        <option value="">Todas</option>
+                                        <!-- Opções serão carregadas via JS -->
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Calcular</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="calculadora-resultados" class="mt-4">
+                                <!-- Resultados serão inseridos via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Seu arquivo JavaScript -->
+    <script type="module" src="/static/build.js"></script>
+</body>
+
+</html>
